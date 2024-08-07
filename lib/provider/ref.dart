@@ -8,18 +8,38 @@ import '../models/mymodel.dart';
 
 part 'my_state.dart';
 part 'my_event.dart';
-
 part 'ref.freezed.dart';
 
 class MyRef extends StateNotifier<MyState> {
   MyRef() : super(MyState.empty());
 
-  mapEventsToStates(MyEvent event) async {
-    // Complete this function
-    // u must check the internet connection and get the data from the domain and update the state
+  Future<void> mapEventsToStates(MyEvent event) async {
+    await event.when(
+      fetchData: () async {
+        state = state.copyWith(isLoading: true);
+        print("before con check");
+        if (await AppServices.checkConnectivity()) {
+          try {
+            final data = await MyDomain.getData();
 
-    return event.whenOrNull();
+            state = state.copyWith(
+              myModelList: data,
+              isLoading: false,
+              isConnected: true,
+            );
+          } catch (e) {
+            state = state.copyWith(
+              isLoading: false,
+              isConnected: true,
+            );
+          }
+        } else {
+          state = state.copyWith(
+            isLoading: false,
+            isConnected: false,
+          );
+        }
+      },
+    );
   }
 }
-
-

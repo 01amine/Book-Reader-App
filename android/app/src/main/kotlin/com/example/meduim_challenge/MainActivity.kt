@@ -7,51 +7,36 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
-class MainActivity: FlutterActivity() {
-        private val CHANNEL = "samples.flutter.dev/"
 
-        @RequiresApi(Build.VERSION_CODES.M)
-        override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-            super.configureFlutterEngine(flutterEngine)
-            MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-                    call, result ->
-                if (call.method == "checkConnectiviy") {
-                    val online = false 
-                    result.success(online);
-                } else {
+class MainActivity : FlutterActivity() {
+    private val CHANNEL = "samples.flutter.dev/"
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "checkConnectivity" -> {
+                    val isOnline = isOnline(this)
+                    result.success(isOnline)
+                }
+                else -> {
                     result.notImplemented()
                 }
             }
         }
-
-
-        @RequiresApi(Build.VERSION_CODES.M)
-        fun isOnline(context: Context): Boolean {
-                val connectivityManager =
-                    context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-                if (connectivityManager != null) {
-                    val capabilities =
-                        connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-                    if (capabilities != null) {
-                        if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                            return true
-                        } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                            return true
-                        } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                            return true
-                        }
-                    }
-                }
-                return false
-
-        }
-
-
     }
 
-
-
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun isOnline(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        return capabilities?.run {
+            hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+            hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+            hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        } ?: false
+    }
+}

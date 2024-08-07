@@ -10,7 +10,7 @@ class Http {
     try {
       final req = await _defaultHttpClient.getUrl(uri);
 
-      return req as HttpClientResponse;
+      return await req.close();
     } catch (e) {
       rethrow;
     }

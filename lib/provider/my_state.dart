@@ -6,8 +6,8 @@ class MyState with _$MyState {
 
   factory MyState({
     required List<MyModel> myModelList,
-    bool? isLoading,
-    bool? isConnected,
+    required bool isLoading,
+    required bool isConnected,
   }) = _MyState;
 
   factory MyState.empty() => MyState(

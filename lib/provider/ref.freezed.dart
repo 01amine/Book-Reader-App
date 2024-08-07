@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, non_nullable_equals_parameter
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'ref.dart';
@@ -180,15 +180,6 @@ abstract class _MyState extends MyState {
   @JsonKey(ignore: true)
   _$$MyStateImplCopyWith<_$MyStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-class MyScreen extends StatelessWidget {
-  const MyScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    throw UnimplementedError();
-  }
 }
 
 /// @nodoc

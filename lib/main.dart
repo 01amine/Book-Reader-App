@@ -1,22 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meduim_challenge/provider/my_provider.dart';
 import 'package:meduim_challenge/provider/ref.dart';
 import 'package:meduim_challenge/view/my_screen.dart' as my_screen;
+import 'package:meduim_challenge/view/my_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
+    Future(() {
+      ref
+          .read(myNotifierProvider.notifier)
+          .mapEventsToStates(const MyEvent.fetchData());
+    });
   }
 
   @override
